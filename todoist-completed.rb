@@ -4,9 +4,10 @@ require "json"
 todoist_token = 'YOUR_TODOIST_TOKEN_HERE'
 
 SCHEDULER.every '3m' do
-    uri = URI.parse("https://todoist.com/API/v7/completed/get_stats?token=#{todoist_token}")
-    http = Net::HTTP.new(uri.host, uri.port)
-    request = Net::HTTP::Get.new(uri.request_uri)
+    http = Net::HTTP.new("todoist.com", 443)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+    request = Net::HTTP::Get.new("/API/v7/completed/get_stats?token=#{todoist_token}")
     response = http.request(request)
      
     if response.code == "200"
